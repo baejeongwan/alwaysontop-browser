@@ -74,7 +74,7 @@ const menuTemplate = [
             {
                 label: "Visit official repository",
                 click: () => {
-                    shell.openExternal("https://github.com/baejeongwan")
+                    shell.openExternal("https://github.com/baejeongwan/alwaysontop-browser")
                 }
             },
             {

@@ -5,12 +5,46 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder -w"
   },
   "author": "Baejeongwan",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "electron": "^34.2.0",
     "electron-builder": "^25.1.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/baejeongwan/alwaysontop-browser"
+  },
+  "build": {
+    "appId": "com.baejeongwan.aotbrowser",
+    "publish": {
+      "provider": "github"
+    },
+    "win": {
+      "verifyUpdateCodeSignature": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "category": "Utility"
+    },
+    "directories": {
+      "output": "build",
+      "buildResources": "assets"
+    }
+  },
+  "dependencies": {
+    "electron-progressbar": "^2.2.1",
+    "electron-updater": "^6.3.9"
   }
 }
