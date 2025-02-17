@@ -1,0 +1,114 @@
+body {
+    margin: 0px 0px
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.loading-bar-container {
+    width: 100%;
+    height: 5px;
+    overflow-x: hidden;
+}
+
+.loading-bar {
+    position: relative;
+    left: 0%;
+    width: 130%;
+    height: 100%;
+    animation: 2s ease 0.1s infinite normal paused loading-bar-move;
+}
+
+.loading-bar.active{
+    background-color: rgb(42, 233, 233);
+    animation-play-state: running;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes loading-bar-move {
+    from {
+        left: -130%;
+    }
+
+    to {
+        left: 130%;
+    }
+}
+
+.navigate-bar {
+    display: flex;
+    margin: 2px 2px;
+}
+
+.navigate-bar-btn {
+    margin-left: 2px;
+    margin-right: 2px;
+    border: 0px;
+    height: 30px;
+    width: 30px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navigate-bar-url-box {
+    flex-grow: 1;
+    border: 0px;
+    border-radius: 5px;
+    min-width: 0px;
+}
+
+webview {
+    display: inline-flex;
+    width: 100%;
+    flex-grow: 1;
+}
+
+@media (prefers-color-scheme: light) {
+    .navigate-bar-btn {
+        background-color: #fff;
+    }
+
+    .navigate-bar-btn:hover {
+        background-color: #ddd;
+    }
+
+    .navigate-bar-url-box {
+        background-color: #eee;
+    }
+    .navigate-bar-url-box:hover {
+        background-color: #ddd;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        background-color: #222;
+    }
+
+    .navigate-bar-btn {
+        background-color: #222;
+        color: #fff;
+    }
+
+    .navigate-bar-btn:hover {
+        background-color: #444;
+    }
+    
+    .navigate-bar-url-box {
+        background-color: #444;
+        color: white;
+    }
+
+    .navigate-bar-url-box:hover {
+        background-color: #333;
+    }
+}
