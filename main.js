@@ -1,6 +1,8 @@
 const { app, BrowserWindow, ipcMain, Menu, shell, dialog } = require('electron')
 const path = require('path');
 
+require('./updater.js')
+
 /**
  * Window
  * @type BrowserWindow
