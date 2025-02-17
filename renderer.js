@@ -2,9 +2,9 @@ document.getElementById("navigate-bar").addEventListener("submit", function (e) 
     e.preventDefault()
     e.stopPropagation()
     if (document.getElementById("navigate-bar").checkValidity()) {
-        document.querySelector("webview").loadURL(document.getElementById("url-input-box").value)
+        loadPage(document.getElementById("url-input-box").value)
     } else {
-        document.querySelector("webview").loadURL("https://google.com/search?q=" + document.getElementById("url-input-box").value)
+        loadPage("https://google.com/search?q=" + document.getElementById("url-input-box").value)
     }
 }, false)
 
@@ -39,3 +39,22 @@ document.querySelector("webview").addEventListener("did-stop-loading", function 
     document.getElementById("refresh-btn-x-icon").classList.add("hidden")
     document.getElementById("loading-bar").classList.remove("active")
 })
+
+function loadPage(url) {
+    console.log(document.querySelector("webview"))
+    document.querySelector("webview").loadURL(url)
+}
+
+
+function checkIfPendingPageExists() {
+    let pending = window.aotBrowser.checkPendingNavigation();
+    if (pending != null) {
+        loadPage(pending)
+    } else {
+        loadPage("https://google.com")
+    }
+}
+
+document.querySelector("webview").addEventListener("dom-ready", () => {
+    checkIfPendingPageExists()
+}, {once: true})

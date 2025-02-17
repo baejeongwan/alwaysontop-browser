@@ -1,28 +1,20 @@
 const { contextBridge, ipcRenderer } = require('electron')
 
-let urlPendingToNavigate = null
-let isRendererReady = false
+let pending = null;
 
 window.addEventListener("DOMContentLoaded", () => {
-    isRendererReady = true
-    if (urlPendingToNavigate != null) {
-        document.querySelector("webview").loadURL(urlPendingToNavigate)
-    }
+    ipcRenderer.send('preloader-ready')
 })
 
 contextBridge.exposeInMainWorld('aotBrowser', {
     checkPendingNavigation: () => {
-        return urlPendingToNavigate
+        return pending
     }
 })
 
 
-ipcRenderer.on("navigate-to", (url) => {
-    if (isRendererReady) {
-        document.querySelector("webview").loadURL(url)
-    } else {
-        urlPendingToNavigate = url
-    }
+ipcRenderer.on("navigate-to", (e,arg) => {
+    pending = arg
 })
 
 

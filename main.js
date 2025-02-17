@@ -1,12 +1,12 @@
-const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, shell, dialog } = require('electron')
 const path = require('path');
-const { TransformStreamDefaultController } = require('stream/web');
 
 /**
  * Window
  * @type BrowserWindow
  */
 let win;
+let startUrl = null;
 
 /**
  * Create a new window.
@@ -26,25 +26,27 @@ const createWindow = () => {
     win.loadFile("index.html")
 }
 
-const gotTheLock = app.requestSingleInstanceLock()
+app.whenReady().then(() => {
+    createWindow()
+})
 
-if (!gotTheLock) {
-    app.quit()
-} else {
-    app.on('second-instance', (e, commandLine, workingDirectory) => {
-        if (win) {
-            if (win.isMinimized()) win.restore()
-            win.focus()
-            console.log(commandLine)
+ipcMain.on('preloader-ready', (e) => {
+    if (process.argv[1] != undefined) {
+        // alwaysontop-browser://open?url=https://example.com
+        try {
+            const url = new URL(process.argv[1]).searchParams;
+            if (url.get("url") != null) {
+                e.sender.send('navigate-to', url.get("url"))
+            }
+        } catch {
+            dialog.showMessageBox(win, {
+                message: "The requested URL is not in URL format.",
+                title: "Open to Always on Top Browser",
+                type: 'warning'
+            })
         }
-
-        
-        app.whenReady().then(() => {
-            createWindow()
-        })
-    })
-}
-
+    }
+})
 
 app.on("window-all-closed", () => {
     if (process.platform != 'darwin') app.quit()
@@ -54,18 +56,17 @@ app.on("window-all-closed", () => {
 const menuTemplate = [
     {role: 'filemenu'},
     {
-        label: 'User data',
+        label: 'Edit',
         submenu: [
             {
-                label: 'Clear everything',
+                label: 'Clear every userdata',
                 click: () => {
                     const appPath = path.join(app.getPath('appData'), "alwaysontop-browser");
-                    require('fs').rm(appPath, () => {
-                        app.relaunch()
-                        app.exit()
-                    })
+                    require('electron-clear-data').clearAllUserData()
+                    app.relaunch()
                 }
-            }
+            },
+            {role: "toggledevtools"}
         ]
     },
     {
@@ -80,7 +81,7 @@ const menuTemplate = [
             {
                 label: "About",
                 click: () => {
-                    require('electron').dialog.showMessageBox(null, {
+                    dialog.showMessageBox(null, {
                         message: `${app.getName()} version ${app.getVersion()}`,
                         title: "About",
                         type: 'info'
